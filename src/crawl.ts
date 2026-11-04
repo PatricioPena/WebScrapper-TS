@@ -19,5 +19,20 @@ export function normalizeURL(url: String){
     }
 }
 
-
-
+export function getHeadingFromHTML(html: string):string {
+    if(html.includes("<h1>")){
+        const split: string[] = html.split("<h1>");
+        const firstHeaderLeft = split[1];
+        const splitFirst = firstHeaderLeft.split("</h1>");
+        return splitFirst[0];
+    }
+    else if(html.includes("<h2>")){
+        const split: string[] = html.split("<h2>");
+        const firstHeaderTwoLeft = split[1];
+        const splitFirst = firstHeaderTwoLeft.split("</h2>");
+        return splitFirst[0];
+    }
+    else{
+        return "Exception -> Html does not contain H1 or H2"
+    }
+}
