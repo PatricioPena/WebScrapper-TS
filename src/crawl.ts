@@ -1,3 +1,4 @@
+import {JSDOM} from "jsdom";
 
 export function normalizeURL(url: String){
     const split: string[] = url.split("//");
@@ -20,19 +21,25 @@ export function normalizeURL(url: String){
 }
 
 export function getHeadingFromHTML(html: string):string {
-    if(html.includes("<h1>")){
-        const split: string[] = html.split("<h1>");
-        const firstHeaderLeft = split[1];
-        const splitFirst = firstHeaderLeft.split("</h1>");
-        return splitFirst[0];
+    try{
+        const dom = new JSDOM(html);
+        const doc = dom.window.document;
+        const h1 = doc.querySelector("h1") ?? doc.querySelector("h2");
+        return (h1?.textContent ?? "").trim();
+    } catch{
+        return ""
     }
-    else if(html.includes("<h2>")){
-        const split: string[] = html.split("<h2>");
-        const firstHeaderTwoLeft = split[1];
-        const splitFirst = firstHeaderTwoLeft.split("</h2>");
-        return splitFirst[0];
-    }
-    else{
-        return "Exception -> Html does not contain H1 or H2"
+}
+
+export function getFirstParagraphFromHTML(html: string): string{
+    try{
+        const dom = new JSDOM(html);
+        const doc = dom.window.document;
+
+        const main = doc.querySelector("main");
+        const p = main?.querySelector("p") ?? doc.querySelector("p");
+        return (p?.textContent ?? "").trim();
+    } catch {
+        return "";
     }
 }

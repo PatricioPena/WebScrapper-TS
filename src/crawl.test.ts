@@ -1,5 +1,5 @@
 import { expect, test} from "vitest"
-import { normalizeURL, getHeadingFromHTML } from "./crawl"
+import { normalizeURL, getHeadingFromHTML, getFirstParagraphFromHTML } from "./crawl"
 
 // NormalizeURL Function ----------
 test("", ()=> {
@@ -27,38 +27,41 @@ test("", ()=> {
 })
 
 // GetHeadingFromHTML Function ----------
-const htmlWithH1: string = "<html><body>\n" +
-    "      <p>Outside paragraph.</p>\n" +
-    "      <main>\n" +
-    "        <h1>First paragraph.</h1>\n" +
-    "        <h2>Second paragraph.</h2>\n" +
-    "      </main>\n" +
-    "    </body></html>"
 
-const htmlWithH2: string = "<html><body>\n" +
-    "      <p>Outside paragraph.</p>\n" +
-    "      <main>\n" +
-    "        <h2>Second paragraph.</h2>\n" +
-    "        <h3>Third paragraph.</h3>\n" +
-    "      </main>\n" +
-    "    </body></html>"
+test("getHeadingFromHTML basic", () => {
+    const inputBody = `<html><body><h1>Test Title</h1></body></html>`;
+    const actual = getHeadingFromHTML(inputBody);
+    const expected = "Test Title";
+    expect(actual).toEqual(expected);
+});
 
-const htmlWithNoH1orH2: string = "<html><body>\n" +
-    "      <p>Outside paragraph.</p>\n" +
-    "      <main>\n" +
-    "        <h3>Third paragraph.</h3>\n" +
-    "        <h4>Forth paragraph.</h4>\n" +
-    "      </main>\n" +
-    "    </body></html>"
+test("getHeadingFromHTML h2 fallback", () => {
+    const inputBody = `<html><body><h2>Fallback Title</h2></body></html>`;
+    const actual = getHeadingFromHTML(inputBody);
+    const expected = "Fallback Title";
+    expect(actual).toEqual(expected);
+});
 
-test("", ()=> {
-    expect(getHeadingFromHTML(htmlWithH1)).toEqual("First paragraph.");
-})
+test("getFirstParagraphFromHTML main priority", () => {
+    const inputBody = `
+    <html><body>
+      <p>Outside paragraph.</p>
+      <main>
+        <p>Main paragraph.</p>
+      </main>
+    </body></html>`;
+    const actual = getFirstParagraphFromHTML(inputBody);
+    const expected = "Main paragraph.";
+    expect(actual).toEqual(expected);
+});
 
-test("", ()=> {
-    expect(getHeadingFromHTML(htmlWithH2)).toEqual("Second paragraph.");
-})
-
-test("", ()=> {
-    expect(getHeadingFromHTML(htmlWithNoH1orH2)).toEqual("Exception -> Html does not contain H1 or H2");
-})
+test("getFirstParagraphFromHTML fallback to first p", () => {
+    const inputBody = `
+    <html><body>
+      <p>First outside paragraph.</p>
+      <p>Second outside paragraph.</p>
+    </body></html>`;
+    const actual = getFirstParagraphFromHTML(inputBody);
+    const expected = "First outside paragraph.";
+    expect(actual).toEqual(expected);
+});
