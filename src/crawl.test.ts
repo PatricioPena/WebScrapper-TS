@@ -1,5 +1,5 @@
 import { expect, test} from "vitest"
-import { normalizeURL, getHeadingFromHTML, getFirstParagraphFromHTML, getURLsFromHTML } from "./crawl"
+import {normalizeURL, getHeadingFromHTML, getFirstParagraphFromHTML, getURLsFromHTML, getImagesFromHTML} from "./crawl"
 
 // NormalizeURL Function ----------
 test("", ()=> {
@@ -83,5 +83,25 @@ test("", () => {
 
     const actual = getURLsFromHTML(html, baseURL);
     const expected = "No '<a>' tags in the HTML body"
+    expect(actual).toEqual(expected)
+})
+
+// getImagesFromHTML ----------
+
+test("", ()=>{
+    const baseURL = "https://www.example.com"
+    const html = '<html><body><img src="/logo.png" alt="Logo"></body></html>'
+
+    const actual = getImagesFromHTML(html, baseURL);
+    const expected = "https://www.example.com/logo.png"
+    expect(actual).toEqual(expected)
+})
+
+test("", () => {
+    const baseURL = "https://www.example.com"
+    const html = '<html><body><span>Boot.dev</span></body></html>'
+
+    const actual = getImagesFromHTML(html, baseURL);
+    const expected = "No '<img>' tags in the HTML body"
     expect(actual).toEqual(expected)
 })

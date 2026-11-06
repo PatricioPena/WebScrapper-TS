@@ -73,3 +73,31 @@ const inputBody = `<html><body><a href="/path/one"><span>Boot.dev</span></a></bo
 `;
 console.log(getURLsFromHTML(inputBody, inputURL));
 */
+
+export function getImagesFromHTML(html: string, baseURL: string):string{
+    try{
+        const dom = new JSDOM(html);
+        const doc = dom.window.document;
+
+        const allImgTags = doc.querySelectorAll("img");
+        if(allImgTags.length == 0){
+            return "No '<img>' tags in the HTML body"
+        }
+        const allImgTagsWithSrc = [];
+        for (let i = 0; i < allImgTags.length; i++){
+            if(allImgTags[i]){
+                allImgTagsWithSrc.push(baseURL + allImgTags[i].getAttribute("src"));
+            }
+        }
+        return allImgTagsWithSrc[0];
+    }catch{
+        return "Error"
+    }
+}
+
+/*
+const inputURL1 = "https://crawler-test.com";
+const inputBody1 = `<html><body><img src="/logo.png" alt="Logo"></body></html>`;
+console.log(getImagesFromHTML(inputBody1, inputURL1));
+*/
+
