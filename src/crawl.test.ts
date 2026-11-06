@@ -76,3 +76,12 @@ test("", () => {
     const expected = "https://www.example.com/path/one"
     expect(actual[0]).toEqual(expected)
 })
+
+test("", () => {
+    const baseURL = "https://www.example.com"
+    const html = '<html><body><span>Boot.dev</span></body></html>'
+
+    const actual = getURLsFromHTML(html, baseURL);
+    const expected = "No '<a>' tags in the HTML body"
+    expect(actual).toEqual(expected)
+})

@@ -50,6 +50,9 @@ export function getURLsFromHTML(html: string, baseURL: string){
         const doc = dom.window.document;
 
         const allATags = doc.querySelectorAll("a");
+        if(allATags.length == 0){
+            return "No '<a>' tags in the HTML body"
+        }
         const allATagsWithHref = [];
         for (let i = 0; i < allATags.length; i++){
             if(allATags[i]){
