@@ -1,5 +1,5 @@
 import { expect, test} from "vitest"
-import { normalizeURL, getHeadingFromHTML, getFirstParagraphFromHTML } from "./crawl"
+import { normalizeURL, getHeadingFromHTML, getFirstParagraphFromHTML, getURLsFromHTML } from "./crawl"
 
 // NormalizeURL Function ----------
 test("", ()=> {
@@ -65,3 +65,14 @@ test("getFirstParagraphFromHTML fallback to first p", () => {
     const expected = "First outside paragraph.";
     expect(actual).toEqual(expected);
 });
+
+// getURLsFromHTML ----------
+
+test("", () => {
+    const baseURL = "https://www.example.com"
+    const html = '<html><body><a href="/path/one"><span>Boot.dev</span></a></body></html>'
+
+    const actual = getURLsFromHTML(html, baseURL);
+    const expected = "https://www.example.com/path/one"
+    expect(actual[0]).toEqual(expected)
+})

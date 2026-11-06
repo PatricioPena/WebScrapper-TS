@@ -43,3 +43,30 @@ export function getFirstParagraphFromHTML(html: string): string{
         return "";
     }
 }
+
+export function getURLsFromHTML(html: string, baseURL: string){
+    try{
+        const dom = new JSDOM(html);
+        const doc = dom.window.document;
+
+        const allATags = doc.querySelectorAll("a");
+        const allATagsWithHref = [];
+        for (let i = 0; i < allATags.length; i++){
+            if(allATags[i]){
+                allATagsWithHref.push(baseURL + allATags[i]);
+            }
+        }
+        return allATagsWithHref;
+    }catch{
+        return "Error"
+    }
+}
+
+/*
+const inputURL = "https://crawler-test.com";
+const inputBody = `<html><body><a href="/path/one"><span>Boot.dev</span></a></body></html>
+<a href="/path/two"><span>Boot.dev</span></a>
+<a href="/path/three"><span>Boot.dev</span></a>
+`;
+console.log(getURLsFromHTML(inputBody, inputURL));
+*/
