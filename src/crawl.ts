@@ -1,4 +1,5 @@
 import {JSDOM} from "jsdom";
+import {type} from "node:os";
 
 export type ExtractedPageData = {
     url: string,
@@ -129,4 +130,41 @@ export async function getHTML(url: string){
     }catch(error) {
         console.log("unexpected error: ", error);
    }
+}
+
+export async function crawlPage(baseURL:string, currentUrl: string, pages: Record<string, number> = {}){
+    const currentURLObj = new URL(currentUrl);
+    const baseURLObj = new URL(baseURL);
+
+    if (currentURLObj.hostname !== baseURLObj.hostname) {
+        return pages;
+    }
+
+    const normalizedURL = normalizeURL(currentUrl)?.toString();
+
+    if(normalizedURL == undefined){
+        return pages;
+    }
+    if(pages[normalizedURL] !== undefined){
+        pages[normalizedURL] += 1;
+        return pages;
+    }
+    else{
+        pages[normalizedURL] = 1;
+    }
+    try {
+        const currentHTML = await getHTML(currentUrl);
+
+        console.log(currentHTML);
+        if (currentHTML != null) {
+            const foundURLs = getURLsFromHTML(currentHTML, currentUrl);
+            for(let i = 0; i < foundURLs.length; i++){
+                pages = await crawlPage(baseURL, foundURLs[i], pages);
+            }
+        }
+    }
+    catch (error){
+        console.log("Unexpected Error: ", error);
+    }
+    return pages
 }
