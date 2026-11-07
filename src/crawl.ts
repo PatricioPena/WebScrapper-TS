@@ -106,3 +106,27 @@ export function extractPageData(html:string, pageURL: string): ExtractedPageData
      throw new Error("Could not extract page data");
     }
 }
+
+
+export async function getHTML(url: string){
+   try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": "BootCrawler/1.0"
+            },
+
+        });
+        if(response.status > 399){
+            console.log("Error-level code");
+            return;
+        }
+        if(!response.headers.get("content-type")?.includes("text/html")){
+            console.log("Error, content format is not HTML");
+            return;
+        }
+        return response.text();
+    }catch(error) {
+        console.log("unexpected error: ", error);
+   }
+}

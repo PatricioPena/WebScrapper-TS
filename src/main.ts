@@ -1,6 +1,7 @@
 import { argv } from 'node:process';
+import { getHTML} from "./crawl";
 
-function main(){
+async function main(){
     const lineItems = argv;
     if(lineItems.length == 2){
         console.log("No arguments where passed...");
@@ -12,6 +13,8 @@ function main(){
     }
     else{
         console.log("Starting the crawler...");
+        const crawled = await getHTML(lineItems[2]);
+        console.log(crawled);
         process.exit(0);
     }
     console.log(lineItems);
