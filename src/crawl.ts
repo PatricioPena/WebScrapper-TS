@@ -1,5 +1,13 @@
 import {JSDOM} from "jsdom";
 
+export type ExtractedPageData = {
+    url: string,
+    heading: string,
+    first_paragraph: string,
+    outgoing_links: string[],
+    image_urls: string[]
+}
+
 export function normalizeURL(url: String){
     const split: string[] = url.split("//");
 
@@ -53,12 +61,10 @@ export function getURLsFromHTML(html: string, baseURL: string): string[] {
     for (const anchor of document.querySelectorAll("a")) {
         const href = anchor.getAttribute("href");
 
-        // Skip anchors that do not have an href attribute.
         if (href === null) {
             continue;
         }
 
-        // Handles both absolute URLs and relative paths.
         links.push(new URL(href, baseURL).href);
     }
 
@@ -83,4 +89,20 @@ export function getImagesFromHTML(html: string, baseURL: string): string[] {
     }
 
     return images;
+}
+
+
+export function extractPageData(html:string, pageURL: string): ExtractedPageData{
+    try{
+        return {
+            url: pageURL,
+            heading: getHeadingFromHTML(html),
+            first_paragraph: getFirstParagraphFromHTML(html),
+            outgoing_links: getURLsFromHTML(html, pageURL),
+            image_urls: getImagesFromHTML(html, pageURL)
+        }
+    }
+    catch {
+     throw new Error("Could not extract page data");
+    }
 }
