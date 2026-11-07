@@ -44,60 +44,43 @@ export function getFirstParagraphFromHTML(html: string): string{
     }
 }
 
-export function getURLsFromHTML(html: string, baseURL: string){
-    try{
-        const dom = new JSDOM(html);
-        const doc = dom.window.document;
+export function getURLsFromHTML(html: string, baseURL: string): string[] {
+    const dom = new JSDOM(html);
+    const document = dom.window.document;
 
-        const allATags = doc.querySelectorAll("a");
-        if(allATags.length == 0){
-            return "No '<a>' tags in the HTML body"
+    const links: string[] = [];
+
+    for (const anchor of document.querySelectorAll("a")) {
+        const href = anchor.getAttribute("href");
+
+        // Skip anchors that do not have an href attribute.
+        if (href === null) {
+            continue;
         }
-        const allATagsWithHref = [];
-        for (let i = 0; i < allATags.length; i++){
-            if(allATags[i]){
-                allATagsWithHref.push(baseURL + allATags[i]);
-            }
-        }
-        return allATagsWithHref;
-    }catch{
-        return "Error"
+
+        // Handles both absolute URLs and relative paths.
+        links.push(new URL(href, baseURL).href);
     }
+
+    return links;
 }
 
-/*
-const inputURL = "https://crawler-test.com";
-const inputBody = `<html><body><a href="/path/one"><span>Boot.dev</span></a></body></html>
-<a href="/path/two"><span>Boot.dev</span></a>
-<a href="/path/three"><span>Boot.dev</span></a>
-`;
-console.log(getURLsFromHTML(inputBody, inputURL));
-*/
+export function getImagesFromHTML(html: string, baseURL: string): string[] {
+    const dom = new JSDOM(html);
+    const document = dom.window.document;
 
-export function getImagesFromHTML(html: string, baseURL: string):string{
-    try{
-        const dom = new JSDOM(html);
-        const doc = dom.window.document;
+    const images: string[] = [];
 
-        const allImgTags = doc.querySelectorAll("img");
-        if(allImgTags.length == 0){
-            return "No '<img>' tags in the HTML body"
+    for (const image of document.querySelectorAll("img")) {
+        const src = image.getAttribute("src");
+
+        // Skip images that do not have a src attribute.
+        if (src === null) {
+            continue;
         }
-        const allImgTagsWithSrc = [];
-        for (let i = 0; i < allImgTags.length; i++){
-            if(allImgTags[i]){
-                allImgTagsWithSrc.push(baseURL + allImgTags[i].getAttribute("src"));
-            }
-        }
-        return allImgTagsWithSrc[0];
-    }catch{
-        return "Error"
+
+        images.push(new URL(src, baseURL).href);
     }
+
+    return images;
 }
-
-/*
-const inputURL1 = "https://crawler-test.com";
-const inputBody1 = `<html><body><img src="/logo.png" alt="Logo"></body></html>`;
-console.log(getImagesFromHTML(inputBody1, inputURL1));
-*/
-

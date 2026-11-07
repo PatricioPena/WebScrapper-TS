@@ -82,7 +82,7 @@ test("", () => {
     const html = '<html><body><span>Boot.dev</span></body></html>'
 
     const actual = getURLsFromHTML(html, baseURL);
-    const expected = "No '<a>' tags in the HTML body"
+    const expected:string[] = []
     expect(actual).toEqual(expected)
 })
 
@@ -93,7 +93,7 @@ test("", ()=>{
     const html = '<html><body><img src="/logo.png" alt="Logo"></body></html>'
 
     const actual = getImagesFromHTML(html, baseURL);
-    const expected = "https://www.example.com/logo.png"
+    const expected = ["https://www.example.com/logo.png"]
     expect(actual).toEqual(expected)
 })
 
@@ -102,6 +102,6 @@ test("", () => {
     const html = '<html><body><span>Boot.dev</span></body></html>'
 
     const actual = getImagesFromHTML(html, baseURL);
-    const expected = "No '<img>' tags in the HTML body"
+    const expected:string[] = []
     expect(actual).toEqual(expected)
 })
