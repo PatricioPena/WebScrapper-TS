@@ -1,5 +1,5 @@
 import { argv } from 'node:process';
-import {crawlPage, getHTML} from "./crawl";
+import {crawlPage, crawlSiteAsync, getHTML} from "./crawl";
 
 async function main(){
     const lineItems = argv;
@@ -15,7 +15,9 @@ async function main(){
         console.log("Starting the crawler...");
         //const crawled = await getHTML(lineItems[2]);
         //console.log(crawled);
-        const crawl = await crawlPage(lineItems[2], lineItems[2]);
+        // const crawl = await crawlPage(lineItems[2], lineItems[2]);
+        const crawlConcurrent = await crawlSiteAsync(lineItems[2], 2);
+        console.log(crawlConcurrent);
         process.exit(0);
     }
     //console.log(lineItems);
