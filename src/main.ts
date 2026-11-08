@@ -1,5 +1,6 @@
 import { argv } from 'node:process';
 import {crawlPage, crawlSiteAsync, getHTML} from "./crawl";
+import {writeJSONReport} from "./report";
 
 async function main(){
     const lineItems = argv;
@@ -23,6 +24,7 @@ async function main(){
             );
         }
         console.log(pages);
+        writeJSONReport(pages, "report.json");
         process.exit(0);
     }
 }
