@@ -174,20 +174,41 @@ class ConcurrentCrawler {
     baseURL: string;
     pages: Record<string, number>;
     limit: Function;
+    // added
+    maxPages: number;
+    shouldStop: boolean;
+    allTasks: Set<Promise<void>>
+    visited: Set<string>
 
-    constructor(baseURL: string, maxConcurrency: number = 5) {
+    constructor(baseURL: string, maxConcurrency: number = 5, maxPages: number) {
         this.baseURL = baseURL;
         this.pages = {};
         this.limit = pLimit(maxConcurrency);
+        this.maxPages = maxPages;
+        this.shouldStop = false;
+        this.allTasks = new Set();
+        this.visited = new Set();
     }
 
     private addPageVisit(normalizedURL: string){
+        if(this.shouldStop){
+            return false;
+        }
+        if(this.visited.has(normalizedURL)){
+            return false;
+        }
+        if(this.visited.size == this.maxPages){
+            this.shouldStop = true;
+            console.log("Reached maximum number of pages to crawl.");
+            return false;
+        }
         if(this.pages[normalizedURL] !== undefined){
             this.pages[normalizedURL] += 1;
             return false;
         }
         else{
             this.pages[normalizedURL] = 1;
+            this.visited.add(normalizedURL);
             return true;
         }
     }
@@ -223,6 +244,11 @@ class ConcurrentCrawler {
     }
 
     async crawlPage(currentUrl: string):Promise<void> {
+
+        if(this.shouldStop){
+            return;
+        }
+
         const currentURLObj = new URL(currentUrl);
         const baseURLObj = new URL(this.baseURL);
 
@@ -240,6 +266,8 @@ class ConcurrentCrawler {
            return;
         }
 
+        console.log("Page crawled ", normalizedURL);
+
         const html = await this.getHTML(currentURLObj.toString());
 
         if(!html){
@@ -248,7 +276,18 @@ class ConcurrentCrawler {
 
         const allURLs = getURLsFromHTML(html, currentURLObj.toString())
 
-        const promises = allURLs.map((url) => this.crawlPage(url));
+        const promises = [] // allURLs.map((url) => this.crawlPage(url));
+
+        for(let i = 0; i < allURLs.length; i++){
+            const value = this.crawlPage(allURLs[i]);
+
+            promises.push(value);
+
+            this.allTasks.add(value);
+            value.finally(()  => {
+                this.allTasks.delete(value);
+            })
+        }
 
         await Promise.all(promises);
     }
@@ -260,7 +299,7 @@ class ConcurrentCrawler {
 
 }
 
-export async function crawlSiteAsync(baseURL: string, maxConcurrency: number = 5){
-    const newCrawler = new ConcurrentCrawler(baseURL, maxConcurrency);
-    return await newCrawler.crawl();
+export async function crawlSiteAsync(baseURL: string, maxConcurrency: number = 5, maxPages: number = 1){
+     const newCrawler = new ConcurrentCrawler(baseURL, maxConcurrency, maxPages);
+     return await newCrawler.crawl();
 }
