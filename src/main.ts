@@ -13,14 +13,18 @@ async function main(){
     }
     else{
         console.log("Starting the crawler...");
-        //const crawled = await getHTML(lineItems[2]);
-        //console.log(crawled);
-        // const crawl = await crawlPage(lineItems[2], lineItems[2]);
-        const crawlConcurrent = await crawlSiteAsync(lineItems[2], Number(lineItems[3]), Number(lineItems[4]));
-        console.log(crawlConcurrent);
+        const pages = await crawlSiteAsync(lineItems[2], Number(lineItems[3]), Number(lineItems[4]));
+
+        console.log("Finished crawling.");
+        const firstPage = Object.values(pages)[0];
+        if (firstPage) {
+            console.log(
+                `First page record: ${firstPage["url"]} - ${firstPage["heading"]}`,
+            );
+        }
+        console.log(pages);
         process.exit(0);
     }
-    //console.log(lineItems);
 }
 
 main();
