@@ -109,8 +109,7 @@ The tests in `crawl.test.ts` cover:
 │   ├── main.ts          # CLI entry point: parses arguments and starts the crawl
 │   ├── crawl.ts         # Crawling logic and HTML extraction helpers
 │   ├── crawl.test.ts    # Vitest unit tests
-│   ├── report.ts        # Writes the crawl results to a JSON file
-│   └── index.ts         # Placeholder file
+│   └── report.ts        # Writes the crawl results to a JSON file
 ├── .nvmrc               # Node version
 ├── package.json
 ├── tsconfig.json
