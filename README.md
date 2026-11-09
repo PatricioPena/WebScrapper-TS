@@ -69,7 +69,7 @@ This crawls up to 25 pages starting from that URL, with at most 5 requests in fl
   {
     "url": "https://examplescrapping.dev/test/accountpage/",
     "heading": "My Account Page",
-    "first_paragraph": "All account informa",
+    "first_paragraph": "All account information in one place",
     "outgoing_links": [
       "https://examplescrapping.dev/test/accountpage/info/"
     ],
