@@ -20,7 +20,7 @@ For each page it crawls, the tool extracts:
 - **URL normalization** – `https://site.com/path/` and `http://site.com/path` are treated as the same page, so nothing is crawled twice.
 - **Concurrency control** – uses [`p-limit`](https://github.com/sindresorhus/p-limit) to cap the number of simultaneous requests.
 - **Page limit** – stops crawling once a maximum number of pages is reached.
-- **Polite requests** – sends a `User-Agent: BootCrawler/1.0` header, skips error responses (status > 399), and skips non-HTML content.
+- **Polite requests** – sends a `User-Agent: UserCrawler/1.0` header, skips error responses (status > 399), and skips non-HTML content.
 - **JSON report** – results are sorted by URL and saved to `report.json`.
 
 ## Requirements
