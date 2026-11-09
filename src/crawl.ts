@@ -113,7 +113,7 @@ export async function getHTML(url: string){
         const response = await fetch(url, {
             method: "GET",
             headers: {
-                "User-Agent": "BootCrawler/1.0"
+                "User-Agent": "UserCrawler/1.0"
             },
 
         });

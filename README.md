@@ -55,7 +55,7 @@ npm start -- <baseURL> <maxConcurrency> <maxPages>
 ### Example
 
 ```bash
-npm start -- https://learnwebscraping.dev/practice/ecommerce/ 5 25
+npm start -- https://examplescrapping.dev/test/accountpage/ 5 25
 ```
 
 This crawls up to 25 pages starting from that URL, with at most 5 requests in flight at once. When it finishes, it prints the results to the console and writes them to `report.json` in the directory you ran the command from.
@@ -67,11 +67,11 @@ This crawls up to 25 pages starting from that URL, with at most 5 requests in fl
 ```json
 [
   {
-    "url": "https://learnwebscraping.dev/practice/ecommerce/",
-    "heading": "Fantasy Ecommerce Catalog",
-    "first_paragraph": "Browse fantasy product listings, category pages, detail pages, prices, rarity, stock labels, and specifications.",
+    "url": "https://examplescrapping.dev/test/accountpage/",
+    "heading": "My Account Page",
+    "first_paragraph": "All account informa",
     "outgoing_links": [
-      "https://learnwebscraping.dev/practice/ecommerce/categories/"
+      "https://examplescrapping.dev/test/accountpage/info/"
     ],
     "image_urls": []
   }
